@@ -1,5 +1,4 @@
-import React from "react";
-import type { ITable } from "../../../restaurant-table/types";
+import type { ITable } from "../../restaurant-table/types";
 
 interface Props {
     tables: ITable[];

@@ -92,7 +92,7 @@ export const CustomerMenuPage = () => {
     };
 
     const cartItemsCount = Object.values(cart).reduce((sum, current) => sum + current.quantity, 0);
-    const cartSubtotal = Object.values(cart).reduce((sum, current) => sum + (current.price * current.quantity), 0);
+    const cartSubtotal = Object.values(cart).reduce((sum, current) => sum + (Number(current.price) * current.quantity), 0);
 
     const displayedItems = aiResults || menuItems;
 

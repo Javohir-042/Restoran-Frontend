@@ -19,7 +19,7 @@ export const useCustomerTable = (tableId: string | undefined) => {
 export const useCustomerActiveBill = (tableId: string | undefined) => {
     return useQuery({
         queryKey: ["customer", "bill", tableId],
-        queryFn: () => API.get<IApiResponse<ICustomerBill>>(CUSTOMER_API.ACTIVE_BILL(tableId!)).then(res => res.data.data)
+        queryFn: () => API.get<IApiResponse<ICustomerBill>>(CUSTOMER_API.BILL_BY_TABLE(tableId!)).then(res => res.data.data)
             // Catch 404 meaning no active bill exists
             .catch((err) => {
                 if (err.response?.status === 404) return null;
@@ -62,7 +62,7 @@ export const useCustomerSubmitOrder = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (payload: { billId: string; items: { menuItemId: string; quantity: number }[] }) =>
-            API.post(CUSTOMER_API.ORDER_ITEMS, payload),
+            API.post(CUSTOMER_API.ADD_ORDER_ITEMS, payload),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ["customer", "order-items", variables.billId] });
             toast.success("Buyurtma qabul qilindi!");
@@ -77,7 +77,7 @@ export const useCustomerSubmitOrder = () => {
 export const useCustomerOrderItems = (billId: string | null | undefined) => {
     return useQuery({
         queryKey: ["customer", "order-items", billId],
-        queryFn: () => API.get<IApiResponse<ICustomerOrderItem[]>>(CUSTOMER_API.BILL_ORDERS(billId!)).then(res => res.data.data),
+        queryFn: () => API.get<IApiResponse<ICustomerOrderItem[]>>(CUSTOMER_API.ORDER_ITEMS_BY_BILL(billId!)).then(res => res.data.data),
         enabled: !!billId,
         refetchInterval: 5000,
     });

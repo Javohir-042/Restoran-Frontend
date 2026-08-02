@@ -1,4 +1,3 @@
-import React from "react";
 import type { ICartItem } from "../types";
 
 interface Props {
@@ -11,7 +10,7 @@ export const CartPanel = ({ cartItems, onCheckout, isSubmitting }: Props) => {
     if (cartItems.length === 0) return null;
 
     const totalQuantity = cartItems.reduce((acc, item) => acc + item.cartQuantity, 0);
-    const totalPrice = cartItems.reduce((acc, item) => acc + parseInt(item.price) * item.cartQuantity, 0);
+    const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.price) * item.cartQuantity, 0);
 
     return (
         <div className="fixed bottom-0 left-0 right-0 p-4 pb-6 bg-gradient-to-t from-white via-white to-white/90 border-t border-gray-100 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] z-50">

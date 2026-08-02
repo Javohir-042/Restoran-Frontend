@@ -20,7 +20,7 @@ export const GeneralSettingsTab = () => {
     const { data: generalData, isLoading } = useGeneralSettings();
     const { mutate: updateGeneral, isPending } = useUpdateGeneralSettings();
 
-    const { register, handleSubmit, control, formState: { errors }, reset, watch } = useForm<FormValues>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             restaurantName: "",

@@ -1,17 +1,17 @@
-export interface ITableInfo {
+export interface ICustomerTable {
     id: string;
     tableNumber: number;
     status: "BOSH" | "BAND" | "REZERV";
 }
 
-export interface ICategory {
+export interface ICustomerCategory {
     id: string;
     name: string;
     nameRu: string;
     avatarUrl: string | null;
 }
 
-export interface IMenuItem {
+export interface ICustomerMenuItem {
     id: string;
     name: string;
     nameRu: string;
@@ -22,7 +22,7 @@ export interface IMenuItem {
     categoryId: string;
 }
 
-export interface IBillInfo {
+export interface ICustomerBill {
     id: string;
     tableId: string;
     status: "OCHIQ" | "TOLANDI";
@@ -33,7 +33,7 @@ export interface IBillInfo {
 
 export type TOrderItemStatus = "YANGI" | "TAYYORLANMOQDA" | "TAYYOR" | "YETKAZILDI";
 
-export interface IOrderItem {
+export interface ICustomerOrderItem {
     id: string;
     quantity: number;
     priceAtOrder: number;
@@ -42,9 +42,25 @@ export interface IOrderItem {
     createdAt: string;
 }
 
+export interface ICartItem {
+    id: string;
+    name: string;
+    price: number | string;
+    cartQuantity: number;
+    avatarUrl?: string | null;
+}
+
 export interface ICartLine {
     menuItemId: string;
     name: string;
-    price: number;
+    price: number | string;
     quantity: number;
+    avatarUrl?: string | null;
 }
+
+// ALIASES for backward compatibility with existing components
+export type ICategory = ICustomerCategory;
+export type IMenuItem = ICustomerMenuItem;
+export type ITableInfo = ICustomerTable;
+export type IBillInfo = ICustomerBill;
+export type IOrderItem = ICustomerOrderItem;

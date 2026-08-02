@@ -1,4 +1,3 @@
-import React from "react";
 import { X, Bell } from "lucide-react";
 import type { IWaiterOrderItem } from "../types";
 import { useMarkDelivered } from "../useWaiter";

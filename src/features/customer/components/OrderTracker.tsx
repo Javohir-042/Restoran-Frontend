@@ -23,7 +23,7 @@ export const OrderTracker = ({ items, isLoading }: Props) => {
 
     // Check if the bill is entirely finished (all are 'YETKAZILDI')
     const allDelivered = items.every(i => i.status === "YETKAZILDI");
-    const totalAmount = items.reduce((acc, curr) => acc + (parseInt(curr.priceAtOrder) * curr.quantity), 0);
+    const totalAmount = items.reduce((acc, curr) => acc + (curr.priceAtOrder * curr.quantity), 0);
 
     return (
         <div className="flex flex-col gap-3 pb-24">
