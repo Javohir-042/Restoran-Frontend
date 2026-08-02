@@ -1,11 +1,15 @@
 import { Outlet } from "react-router-dom";
 import { AdminSidebar } from "./admin-sidebar";
-import { Search, Bell, User, Menu } from "lucide-react";
+import { Search, User, Menu } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { AdminProfileModal } from "./admin-profile-modal";
 
 export const AdminLayout = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [profileModalOpen, setProfileModalOpen] = useState(false);
+    const { userName, userAvatar } = useAuth();
 
     return (
         <div className="flex h-screen w-full bg-[#f8f9fb] overflow-hidden relative">
@@ -51,11 +55,23 @@ export const AdminLayout = () => {
 
                     {/* Right section */}
                     <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-                        <button className="text-gray-500 hover:text-gray-700 transition-colors">
-                            <Bell size={18} strokeWidth={2} />
-                        </button>
-                        <button className="text-gray-500 hover:text-gray-700 transition-colors">
-                            <User size={18} strokeWidth={2} />
+                        <button
+                            onClick={() => setProfileModalOpen(true)}
+                            className="flex items-center gap-2 hover:bg-gray-50 py-1.5 px-2 rounded-lg transition-colors focus:outline-none"
+                        >
+                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden shrink-0 border border-blue-200">
+                                {userAvatar ? (
+                                    <img src={userAvatar} alt="Profile" className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-sm font-bold text-blue-600">
+                                        {userName ? userName.charAt(0).toUpperCase() : <User size={16} />}
+                                    </span>
+                                )}
+                            </div>
+                            <div className="hidden sm:block text-left">
+                                <p className="text-xs font-semibold text-gray-900 leading-none">{userName || "Admin"}</p>
+                                <p className="text-[10px] text-gray-500 mt-0.5">Admin profilini tahrirlash</p>
+                            </div>
                         </button>
                     </div>
                 </header>
@@ -65,6 +81,11 @@ export const AdminLayout = () => {
                     <Outlet />
                 </div>
             </main>
+
+            {/* Profile Modal */}
+            {profileModalOpen && (
+                <AdminProfileModal onClose={() => setProfileModalOpen(false)} />
+            )}
         </div>
     );
 };

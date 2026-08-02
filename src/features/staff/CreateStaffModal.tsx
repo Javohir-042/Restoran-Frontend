@@ -6,8 +6,7 @@ import { X, Camera, Eye, EyeOff } from "lucide-react";
 import { createStaffSchema } from "./schema";
 import { useCreateStaff } from "./useStaff";
 
-type CreateInput = z.input<typeof createStaffSchema>;
-type CreateOutput = z.output<typeof createStaffSchema>;
+type StaffFormValues = z.infer<typeof createStaffSchema>;
 
 export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -16,7 +15,7 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const createStaff = useCreateStaff();
 
-    const form = useForm<CreateInput, any, CreateOutput>({
+    const form = useForm<StaffFormValues>({
         resolver: zodResolver(createStaffSchema),
         defaultValues: {
             firstName: "",
@@ -34,9 +33,9 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
         setAvatarPreview(URL.createObjectURL(file));
     };
 
-    const onSubmit = (data: CreateOutput) => {
+    const onSubmit = (data: StaffFormValues) => {
         createStaff.mutate(
-            { data, avatar: avatarFile ?? undefined },
+            { data: data as any, avatar: avatarFile ?? undefined },
             { onSuccess: () => onClose() }
         );
     };

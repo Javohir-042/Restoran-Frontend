@@ -8,5 +8,6 @@ export const useOpenBills = () => {
       const { data } = await API.get("/bill/open");
       return data.data || [];
     },
+    refetchInterval: 15000,
   });
 };

@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useNavigate } from "react-router-dom";
 import { SquareArrowLeft, X } from "lucide-react";
 import API from "@/config/request";
+import { useGeneralSettings } from "@/features/settings/useSettings";
 
 interface AdminSidebarProps {
     isOpen: boolean;
@@ -12,29 +13,30 @@ interface AdminSidebarProps {
 
 export const AdminSidebar = ({ isOpen, onClose }: AdminSidebarProps) => {
     const location = useLocation();
-    const { logout } = useAuth();
+    const { logout, userRole, userName: authUserName, userAvatar } = useAuth();
+    const { data: generalData } = useGeneralSettings();
     const navigate = useNavigate();
 
-    // Fallback names if not in localStorage
-    const userName = localStorage.getItem("userName") || "John Doe";
-    const userRole = localStorage.getItem("userRole") || "MANAGER";
+    // Fallback names if not in auth state
+    const userName = authUserName || "John Doe";
+    const role = userRole || "MANAGER";
 
     const handleLogout = async () => {
-      try {
-        const isAdmin =
-          userRole === "SUPER_ADMIN" ||
-          userRole === "ADMIN" ||
-          userRole === "MANAGER";
-        const endpoint = isAdmin
-          ? "/auth/admin/sign-out"
-          : "/auth/staff/sign-out";
-        await API.post(endpoint); 
-      } catch (err) {
-        console.error("Logout failed on backend", err);
-      } finally {
-        logout();
-        navigate("/login", { replace: true });
-      }
+        try {
+            const isAdmin =
+                role === "SUPER_ADMIN" ||
+                role === "ADMIN" ||
+                role === "MANAGER";
+            const endpoint = isAdmin
+                ? "/auth/admin/sign-out"
+                : "/auth/staff/sign-out";
+            await API.post(endpoint);
+        } catch (err) {
+            console.error("Logout failed on backend", err);
+        } finally {
+            logout();
+            navigate("/login", { replace: true });
+        }
     };
 
     const roleLabelMap: Record<string, string> = {
@@ -42,7 +44,7 @@ export const AdminSidebar = ({ isOpen, onClose }: AdminSidebarProps) => {
         ADMIN: "MANAGER",
     };
 
-    const displayRole = roleLabelMap[userRole] || userRole;
+    const displayRole = roleLabelMap[role] || role;
 
     // Get initials for avatar (e.g. "John Doe" -> "JD")
     const initials = userName
@@ -64,7 +66,7 @@ export const AdminSidebar = ({ isOpen, onClose }: AdminSidebarProps) => {
             {/* Brand */}
             <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5 flex items-center justify-between">
                 <div>
-                    <h1 className="text-[19px] font-bold text-[#1a56db] tracking-tight">RESTORAN</h1>
+                    <h1 className="text-[19px] font-bold text-[#1a56db] tracking-tight">{generalData?.restaurantName || "RESTORAN"}</h1>
                     <p className="text-[11px] text-gray-500 font-medium mt-0.5">Admin Terminal</p>
                 </div>
                 {/* Close button — only on mobile */}
@@ -105,8 +107,12 @@ export const AdminSidebar = ({ isOpen, onClose }: AdminSidebarProps) => {
                 <div className="flex flex-col gap-4 sm:gap-5">
                     {/* User profile */}
                     <div className="flex items-center gap-2.5 sm:gap-3">
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#e8f1ff] flex items-center justify-center text-[#1a56db] text-[12px] sm:text-[13px] font-bold shrink-0">
-                            {initials}
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#e8f1ff] flex items-center justify-center text-[#1a56db] text-[12px] sm:text-[13px] font-bold overflow-hidden shrink-0 border border-blue-100">
+                            {userAvatar ? (
+                                <img src={userAvatar} alt="Profile" className="w-full h-full object-cover" />
+                            ) : (
+                                initials
+                            )}
                         </div>
                         <div className="flex-1 min-w-0 flex flex-col justify-center">
                             <p className="text-[13px] sm:text-[14px] font-bold text-[#1f2937] truncate leading-none mb-1.5">{userName}</p>

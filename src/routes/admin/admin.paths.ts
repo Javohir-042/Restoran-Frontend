@@ -5,5 +5,6 @@ export const ADMIN_PATH = {
     ORDERS: "/admin/orders",
     TABLES: "/admin/tables",
     MENU: "/admin/menu",
+    CATEGORIES: "/admin/categories",
     SETTINGS: "/admin/settings",
 } as const;

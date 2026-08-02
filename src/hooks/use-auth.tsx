@@ -12,11 +12,13 @@ interface AuthState {
   isAuthenticated: boolean;
   userRole: TUserRole | null;
   userName: string | null;
+  userAvatar: string | null;
 }
 
 interface AuthContextType extends AuthState {
   login: (token: string, role: TUserRole, name?: string) => void;
   logout: () => void;
+  updateProfile: (name: string, avatarUrl: string | null) => void;
   isLoading: boolean;
 }
 
@@ -29,6 +31,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     isAuthenticated: false,
     userRole: null,
     userName: null,
+    userAvatar: null,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,9 +39,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     const token = Cookies.get("token");
     const role = localStorage.getItem("userRole") as TUserRole | null;
     const name = localStorage.getItem("userName");
+    const avatar = localStorage.getItem("userAvatar");
 
     if (token && role) {
-      setAuthState({ isAuthenticated: true, userRole: role, userName: name });
+      setAuthState({ isAuthenticated: true, userRole: role, userName: name, userAvatar: avatar });
     }
     setIsLoading(false);
   }, []);
@@ -50,22 +54,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     localStorage.setItem("userRole", role);
     if (name) localStorage.setItem("userName", name);
 
-    setAuthState({
+    setAuthState((prev) => ({
+      ...prev,
       isAuthenticated: true,
       userRole: role,
       userName: name ?? null,
-    });
+    }));
+  };
+
+  const updateProfile = (name: string, avatarUrl: string | null) => {
+    localStorage.setItem("userName", name);
+    if (avatarUrl) {
+      localStorage.setItem("userAvatar", avatarUrl);
+    } else {
+      localStorage.removeItem("userAvatar");
+    }
+
+    setAuthState((prev) => ({
+      ...prev,
+      userName: name,
+      userAvatar: avatarUrl,
+    }));
   };
 
   const logout = () => {
     Cookies.remove("token");
     localStorage.removeItem("userRole");
     localStorage.removeItem("userName");
-    setAuthState({ isAuthenticated: false, userRole: null, userName: null });
+    localStorage.removeItem("userAvatar");
+    setAuthState({ isAuthenticated: false, userRole: null, userName: null, userAvatar: null });
   };
 
   return (
-    <AuthContext.Provider value={{ ...authState, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ ...authState, login, logout, updateProfile, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

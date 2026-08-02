@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Lock, Delete, Check, ShieldCheck } from "lucide-react";
+import { Mail, Lock, Delete, Check, ShieldCheck, Eye, EyeOff } from "lucide-react";
 import {
   adminLoginSchema,
   type AdminLoginFormValues,
@@ -9,12 +9,15 @@ import {
 import { useAdminLogin } from "@/features/auth/admin-login/useAdminLogin";
 import { useStaffLogin } from "@/features/auth/staff-login/useStaffLogin";
 import { useVerify2Fa } from "@/features/auth/admin-login/useVerify2Fa";
+import { useGeneralSettings } from "@/features/settings/useSettings";
 
 export const Login = () => {
+  const { data: generalData } = useGeneralSettings();
   const [tab, setTab] = useState<"admin" | "staff">("admin");
   const [pin, setPin] = useState("");
   const [twoFaAdminId, setTwoFaAdminId] = useState<string | null>(null);
   const [otpCode, setOtpCode] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const adminLogin = useAdminLogin();
   const staffLogin = useStaffLogin();
@@ -64,11 +67,15 @@ export const Login = () => {
           backgroundSize: "40px 40px",
         }}
       >
-        <div className="w-28 h-28 bg-white rounded-xl flex flex-col items-center justify-center mb-6">
-          <span className="text-blue-600 text-3xl">🍽️</span>
-          <span className="text-blue-600 font-bold text-xs mt-1">RESTORAN</span>
+        <div className="w-28 h-28 bg-white rounded-xl flex flex-col items-center justify-center mb-6 px-2 text-center text-clip overflow-hidden shadow-lg border border-blue-100">
+          <span className="text-blue-600 text-[2rem] drop-shadow-sm">🍽️</span>
+          <span className="text-blue-600 font-extrabold text-[11px] leading-tight mt-1.5 uppercase tracking-wide break-words w-full h-8 flex items-center justify-center">
+            {generalData?.restaurantName || "RESTORAN"}
+          </span>
         </div>
-        <h1 className="text-3xl font-bold mb-3">RESTORAN</h1>
+        <h1 className="text-[34px] font-black mb-3 tracking-tight text-white drop-shadow-md">
+          {generalData?.restaurantName || "RESTORAN"}
+        </h1>
         <p className="text-center text-blue-100 max-w-xs text-sm">
           Buyurtmalar, xodimlar va stollarni bitta joydan boshqaring.
         </p>
@@ -192,11 +199,18 @@ export const Login = () => {
                   <div className="relative mt-1">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       {...form.register("password")}
                       placeholder="••••••••"
-                      className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                      className="w-full pl-9 pr-10 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
                   </div>
                   {form.formState.errors.password && (
                     <p className="text-xs text-red-500 mt-1">
@@ -260,6 +274,13 @@ export const Login = () => {
               <p className="text-center text-xs text-gray-500 mt-4">
                 Enter your 4-digit employee PIN to clock in.
               </p>
+            </div>
+          )}
+
+          {generalData?.contactPhone && (
+            <div className="mt-8 text-center border-t border-gray-100 pt-5">
+              <p className="text-xs text-gray-400 font-medium">Texnik yordam va savollar uchun:</p>
+              <p className="text-sm font-bold text-gray-600 mt-0.5">{generalData.contactPhone}</p>
             </div>
           )}
         </div>
