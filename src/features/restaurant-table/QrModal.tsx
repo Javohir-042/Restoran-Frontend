@@ -80,6 +80,15 @@ export const QrModal = ({
           </div>
         </div>
 
+        {qrUrl.includes("localhost") && (
+          <div className="mb-4 text-left bg-orange-50 border border-orange-100 p-3 rounded-lg">
+            <p className="text-xs text-orange-800 font-medium leading-relaxed">
+              <span className="font-bold">Eslatma:</span> Siz hozir <span className="font-mono bg-orange-100 px-1 text-[10px]">localhost</span> dasiz.
+              Telefonda skaner qilish uchun loyihani aynan IP manzil (masalan, <span className="font-mono bg-orange-100 px-1 text-[10px]">192.168.X.X:5173</span>) orqali ochib, so'ngra u yerdagi QR ni skaner qiling yoki Vercel linkdan kiring!
+            </p>
+          </div>
+        )}
+
         <button
           onClick={handleDownload}
           className="w-full py-3 inline-flex items-center justify-center gap-2 text-sm text-white bg-blue-600 rounded-xl font-semibold shadow-md shadow-blue-500/20 hover:bg-blue-700 active:bg-blue-800 transition-all"
