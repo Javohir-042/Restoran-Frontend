@@ -1,3 +1,4 @@
+cat << 'INNER_EOF' > src/pages/customer/CustomerMenuPage.tsx
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { ChevronLeft, PartyPopper } from "lucide-react";
@@ -104,7 +105,7 @@ export const CustomerMenuPage = () => {
                 <CustomerHeader tableNumber={table?.tableNumber} billStatus={bill?.status} />
 
                 {/* Mobile AI bar (only visible on small screens) */}
-                <div className="block lg:hidden fixed bottom-0 left-0 right-0 z-30">
+                <div className="block lg:hidden">
                     <AISearchBar onResult={handleAiResult} />
                 </div>
 
@@ -188,7 +189,7 @@ export const CustomerMenuPage = () => {
             </div>
 
             {/* Mobile Cart Absolute wrapper (Only shows when lg:hidden anyway) */}
-            <div className="block lg:hidden fixed bottom-0 left-0 right-0 z-30">
+            <div className="block lg:hidden">
                 <CartBar
                     itemCount={cartItemsCount}
                     subtotal={cartSubtotal}
@@ -203,3 +204,4 @@ export const CustomerMenuPage = () => {
 };
 
 export default CustomerMenuPage;
+INNER_EOF

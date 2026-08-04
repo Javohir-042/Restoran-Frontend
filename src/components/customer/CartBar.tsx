@@ -19,7 +19,7 @@ export const CartBar = ({
     const total = subtotal + serviceFee;
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-gray-100 px-4 py-4 pb-safe shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] rounded-t-3xl">
+        <div className="w-full bg-white border-t border-gray-100 px-4 py-4 pb-safe shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] rounded-t-3xl">
             <div className="max-w-md mx-auto space-y-3">
                 <div className="bg-gray-50 rounded-xl p-3 space-y-2 border border-gray-100">
                     <div className="flex justify-between text-xs font-semibold text-gray-500">
