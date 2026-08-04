@@ -98,7 +98,7 @@ export const CustomerMenuPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans pb-[120px] lg:pb-0 relative w-full overflow-hidden flex flex-col lg:flex-row">
-            
+
             {/* LEFT SIDE: Menu content */}
             <div className="flex-1 w-full max-w-md lg:max-w-none mx-auto lg:mx-0 lg:w-[60%] lg:border-r border-gray-100 bg-white min-h-screen lg:overflow-y-auto custom-scrollbar lg:pb-24 shadow-2xl lg:shadow-none">
                 <CustomerHeader tableNumber={table?.tableNumber} billStatus={bill?.status} />
@@ -118,7 +118,26 @@ export const CustomerMenuPage = () => {
                     )}
 
                     {(orderItems && orderItems.length > 0) && (
-                        <OrderStatusList items={orderItems} />
+                        <div className="space-y-3">
+                            <OrderStatusList items={orderItems} />
+
+                            {bill && (
+                                <div className="mx-2 lg:mx-0 px-4 py-3 bg-blue-50 border border-blue-100 rounded-2xl space-y-2 shadow-sm">
+                                    <div className="flex justify-between items-center text-xs font-semibold text-gray-500">
+                                        <span>Buyurtmalar qiymati:</span>
+                                        <span className="text-gray-800">{new Intl.NumberFormat("uz-UZ").format(bill.subtotal)} so'm</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-xs font-semibold text-gray-500">
+                                        <span>Xizmat haqi ({bill.serviceFeePercent}%):</span>
+                                        <span className="text-gray-800">{new Intl.NumberFormat("uz-UZ").format(Math.round((bill.subtotal * bill.serviceFeePercent) / 100))} so'm</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm font-black text-blue-800 pt-2 border-t border-blue-200/60">
+                                        <span>Jami hisobingiz:</span>
+                                        <span>{new Intl.NumberFormat("uz-UZ").format(bill.totalAmount)} so'm</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     )}
 
                     <div className="pt-2 px-1">
@@ -197,7 +216,7 @@ export const CustomerMenuPage = () => {
                     isPending={placeOrder.isPending}
                 />
             </div>
-            
+
         </div>
     );
 };
