@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 import { updateStaffSchema, changePinSchema } from "./schema";
 import { useUpdateStaff, useChangePin } from "./useStaff";
 import type { IStaff } from "./types";
+import { useLanguage } from "@/context/LanguageContext";
 
 type UpdateInput = z.input<typeof updateStaffSchema>;
 type UpdateOutput = z.output<typeof updateStaffSchema>;
@@ -22,6 +23,7 @@ export const EditStaffModal = ({
     const [tab, setTab] = useState<"info" | "pin">("info");
     const updateStaff = useUpdateStaff();
     const changePin = useChangePin();
+    const { t } = useLanguage();
 
     const infoForm = useForm<UpdateInput, any, UpdateOutput>({
         resolver: zodResolver(updateStaffSchema),
@@ -51,10 +53,10 @@ export const EditStaffModal = ({
 
     return (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-            <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md">
+            <div className="bg-white dark:bg-[#18181b] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md">
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                    <h2 className="text-base font-semibold text-gray-900 truncate">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-[#27272a]">
+                    <h2 className="text-base font-semibold text-gray-900 dark:text-[#fafafa] truncate">
                         {staff.firstName} {staff.lastName}
                     </h2>
                     <button
@@ -66,24 +68,24 @@ export const EditStaffModal = ({
                 </div>
 
                 {/* Tabs */}
-                <div className="flex border-b border-gray-100 px-5">
+                <div className="flex border-b border-gray-100 dark:border-[#27272a] px-5">
                     <button
                         onClick={() => setTab("info")}
                         className={`px-3 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === "info"
-                                ? "border-blue-600 text-blue-600"
-                                : "border-transparent text-gray-400 hover:text-gray-600"
+                            ? "border-blue-600 text-blue-600"
+                            : "border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-[#fafafa]"
                             }`}
                     >
-                        Ma'lumotlar
+                        {t("Ma'lumotlar")}
                     </button>
                     <button
                         onClick={() => setTab("pin")}
                         className={`px-3 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === "pin"
-                                ? "border-blue-600 text-blue-600"
-                                : "border-transparent text-gray-400 hover:text-gray-600"
+                            ? "border-blue-600 text-blue-600"
+                            : "border-transparent text-gray-400 hover:text-gray-600 dark:hover:text-[#fafafa]"
                             }`}
                     >
-                        PIN kod
+                        {t("PIN kod")}
                     </button>
                 </div>
 
@@ -95,10 +97,10 @@ export const EditStaffModal = ({
                     >
                         <div className="grid grid-cols-2 gap-3">
                             <div>
-                                <label className="text-xs font-medium text-gray-600">Ism</label>
+                                <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("Ism")}</label>
                                 <input
                                     {...infoForm.register("firstName")}
-                                    className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                                    className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
                                 />
                                 {infoForm.formState.errors.firstName && (
                                     <p className="text-xs text-red-500 mt-1">
@@ -107,10 +109,10 @@ export const EditStaffModal = ({
                                 )}
                             </div>
                             <div>
-                                <label className="text-xs font-medium text-gray-600">Familiya</label>
+                                <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("Familiya")}</label>
                                 <input
                                     {...infoForm.register("lastName")}
-                                    className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                                    className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
                                 />
                                 {infoForm.formState.errors.lastName && (
                                     <p className="text-xs text-red-500 mt-1">
@@ -120,11 +122,11 @@ export const EditStaffModal = ({
                             </div>
                         </div>
                         <div>
-                            <label className="text-xs font-medium text-gray-600">Telefon</label>
+                            <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("Telefon")}</label>
                             <input
                                 {...infoForm.register("phoneNumber")}
                                 placeholder="+998901234567"
-                                className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                                className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
                             />
                             {infoForm.formState.errors.phoneNumber && (
                                 <p className="text-xs text-red-500 mt-1">
@@ -133,30 +135,30 @@ export const EditStaffModal = ({
                             )}
                         </div>
                         <div>
-                            <label className="text-xs font-medium text-gray-600">Rol</label>
+                            <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("Rol")}</label>
                             <select
                                 {...infoForm.register("role")}
-                                className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300 bg-white"
+                                className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
                             >
-                                <option value="OFITSIANT">Ofitsiant</option>
-                                <option value="OSHPAZ">Oshpaz</option>
-                                <option value="KASSIR">Kassir</option>
+                                <option value="OFITSIANT">{t("Ofitsiant")}</option>
+                                <option value="OSHPAZ">{t("Oshpaz")}</option>
+                                <option value="KASSIR">{t("Kassir")}</option>
                             </select>
                         </div>
                         <div className="flex gap-2 pt-1">
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="flex-1 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                                className="flex-1 py-2.5 rounded-lg border border-gray-200 dark:border-[#27272a] text-sm text-gray-600 dark:text-[#a1a1aa] hover:bg-gray-50 dark:hover:bg-[#27272a] transition-colors"
                             >
-                                Bekor qilish
+                                {t("Bekor qilish")}
                             </button>
                             <button
                                 type="submit"
                                 disabled={updateStaff.isPending}
                                 className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
                             >
-                                {updateStaff.isPending ? "Saqlanmoqda..." : "Saqlash"}
+                                {updateStaff.isPending ? t("Saqlanmoqda...") : t("Saqlash")}
                             </button>
                         </div>
                     </form>
@@ -166,17 +168,17 @@ export const EditStaffModal = ({
                         onSubmit={pinForm.handleSubmit(onPinSubmit)}
                         className="p-5 space-y-4"
                     >
-                        <p className="text-xs text-gray-500">
-                            Yangi PIN kod kiritilganda xodimning eski PIN kodi o'chiriladi.
+                        <p className="text-xs text-gray-500 dark:text-[#a1a1aa]">
+                            {t("Yangi PIN kod kiritilganda xodimning eski PIN kodi o'chiriladi.")}
                         </p>
                         <div>
-                            <label className="text-xs font-medium text-gray-600">Yangi PIN kod</label>
+                            <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("Yangi PIN kod")}</label>
                             <input
                                 {...pinForm.register("newPin")}
                                 maxLength={4}
                                 inputMode="numeric"
                                 placeholder="••••"
-                                className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300 tracking-widest"
+                                className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300 tracking-widest"
                             />
                             {pinForm.formState.errors.newPin && (
                                 <p className="text-xs text-red-500 mt-1">
@@ -189,7 +191,7 @@ export const EditStaffModal = ({
                             disabled={changePin.isPending}
                             className="w-full py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
                         >
-                            {changePin.isPending ? "Yangilanmoqda..." : "PIN kodni yangilash"}
+                            {changePin.isPending ? t("Yangilanmoqda...") : t("PIN kodni yangilash")}
                         </button>
                     </form>
                 )}

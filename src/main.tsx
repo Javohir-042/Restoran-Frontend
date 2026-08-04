@@ -5,6 +5,8 @@ import App from "./App.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./hooks/use-auth.tsx";
+import { LanguageProvider } from "./context/LanguageContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import { Toaster } from "sonner";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
@@ -22,8 +24,12 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={client}>
       <BrowserRouter>
         <AuthProvider>
-          <Toaster richColors position="top-right" closeButton />
-          <App />
+          <ThemeProvider>
+            <LanguageProvider>
+              <Toaster richColors position="top-right" closeButton />
+              <App />
+            </LanguageProvider>
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

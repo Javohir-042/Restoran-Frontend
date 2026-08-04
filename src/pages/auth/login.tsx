@@ -10,9 +10,14 @@ import { useAdminLogin } from "@/features/auth/admin-login/useAdminLogin";
 import { useStaffLogin } from "@/features/auth/staff-login/useStaffLogin";
 import { useVerify2Fa } from "@/features/auth/admin-login/useVerify2Fa";
 import { useGeneralSettings } from "@/features/settings/useSettings";
+import { useLanguage } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
+import { Moon, Sun } from "lucide-react";
 
 export const Login = () => {
   const { data: generalData } = useGeneralSettings();
+  const { language, setLanguage, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const [tab, setTab] = useState<"admin" | "staff">("admin");
   const [pin, setPin] = useState("");
   const [twoFaAdminId, setTwoFaAdminId] = useState<string | null>(null);
@@ -58,43 +63,90 @@ export const Login = () => {
   const handleBackspace = () => setPin((p) => p.slice(0, -1));
 
   return (
-    <div className="min-h-screen flex">
-      <div
-        className="hidden md:flex w-1/2 bg-blue-600 relative overflow-hidden flex-col items-center justify-center text-white p-10"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      >
-        <div className="w-28 h-28 bg-white rounded-xl flex flex-col items-center justify-center mb-6 px-2 text-center text-clip overflow-hidden shadow-lg border border-blue-100">
-          <span className="text-blue-600 text-[2rem] drop-shadow-sm">🍽️</span>
-          <span className="text-blue-600 font-extrabold text-[11px] leading-tight mt-1.5 uppercase tracking-wide break-words w-full h-8 flex items-center justify-center">
+    <div className="min-h-screen flex bg-gray-50 dark:bg-[#09090b] transition-colors duration-200">
+      <div className="hidden md:flex w-1/2 relative overflow-hidden flex-col items-center justify-center border-r border-transparent dark:border-[#27272a] p-10 transition-colors duration-200">
+
+        {/* Background Layer */}
+        <div className="absolute inset-0 bg-blue-600 dark:bg-[#050508] transition-colors duration-200 z-0" />
+
+        {/* Subtle Dark Mode Glow effect */}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] hidden dark:block z-0 pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[150px] hidden dark:block z-0 pointer-events-none" />
+
+        {/* Grid pattern */}
+        <div
+          className="absolute inset-0 z-0 opacity-100 dark:opacity-30 transition-opacity duration-200 pointer-events-none mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+
+        {/* Glassmorphism Logo Box */}
+        <div className="relative z-10 w-32 h-32 bg-white dark:bg-white/[0.03] rounded-2xl flex flex-col items-center justify-center mb-8 px-2 text-center text-clip overflow-hidden shadow-[0_8px_30px_rgba(37,99,235,0.2)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)] border border-blue-100 dark:border-white/10 dark:backdrop-blur-3xl transition-all">
+          <span className="text-blue-600 dark:text-blue-400 text-[2.5rem] drop-shadow-sm mb-1">🍽️</span>
+          <span className="text-blue-600 dark:text-blue-300 font-extrabold text-[12px] leading-tight mt-1 uppercase tracking-widest break-words w-full flex items-center justify-center">
             {generalData?.restaurantName || "RESTORAN"}
           </span>
         </div>
-        <h1 className="text-[34px] font-black mb-3 tracking-tight text-white drop-shadow-md">
+
+        {/* Restaurant Name */}
+        <h1 className="relative z-10 text-[38px] font-black mb-4 tracking-tight drop-shadow-md text-white dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-br dark:from-white dark:to-white/60">
           {generalData?.restaurantName || "RESTORAN"}
         </h1>
-        <p className="text-center text-blue-100 max-w-xs text-sm">
-          Buyurtmalar, xodimlar va stollarni bitta joydan boshqaring.
+
+        <p className="relative z-10 text-center text-blue-100 dark:text-[#a1a1aa] max-w-sm text-[15px] font-medium leading-relaxed transition-colors">
+          {t("Buyurtmalar, xodimlar va stollarni bitta joydan boshqaring.")}
         </p>
-        <div className="absolute bottom-6 left-8 right-8 flex justify-between text-[11px] text-blue-200">
+
+        <div className="absolute bottom-10 left-12 right-12 z-10 flex justify-between text-[11px] font-semibold tracking-wider text-blue-200 dark:text-[#52525b] transition-colors uppercase">
           <span>SYSTEM v1.0.0</span>
           <span>SECURE TERMINAL ACCESS</span>
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center bg-gray-50 p-6">
-        <div className="w-full max-w-sm bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          <h2 className="text-xl font-bold text-center text-gray-900">
-            Welcome Back
+      <div className="flex-1 flex flex-col relative items-center justify-center p-6">
+        {/* Settings Toggle */}
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 sm:gap-3 shrink-0">
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 text-gray-500 dark:text-[#a1a1aa] hover:bg-gray-200/50 dark:hover:bg-white/10 rounded-lg transition-colors border border-transparent dark:border-[#27272a]"
+            title="Toggle Dark Mode"
+          >
+            {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+          <div className="flex items-center bg-white dark:bg-[#27272a] p-0.5 rounded-lg border border-gray-200/60 dark:border-[#27272a] shadow-sm transition-colors">
+            <button
+              onClick={() => setLanguage("uz")}
+              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all sm:px-3 ${language === "uz"
+                ? "bg-blue-50 dark:bg-[#3f3f46] text-blue-600 dark:text-[#fafafa] shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+                : "text-gray-500 dark:text-[#a1a1aa] hover:text-gray-900 dark:hover:text-white"
+                }`}
+            >
+              UZB
+            </button>
+            <button
+              onClick={() => setLanguage("ru")}
+              className={`px-2.5 py-1 text-xs font-semibold rounded-md transition-all sm:px-3 ${language === "ru"
+                ? "bg-blue-50 dark:bg-[#3f3f46] text-blue-600 dark:text-[#fafafa] shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+                : "text-gray-500 dark:text-[#a1a1aa] hover:text-gray-900 dark:hover:text-white"
+                }`}
+            >
+              RUS
+            </button>
+          </div>
+        </div>
+
+        <div className="w-full max-w-sm bg-white dark:bg-[#18181b] rounded-2xl shadow-sm border border-gray-100 dark:border-[#27272a] p-8 transition-colors">
+          <h2 className="text-xl font-bold text-center text-gray-900 dark:text-[#fafafa]">
+            {t("Welcome Back")}
           </h2>
-          <p className="text-xs text-center text-gray-500 mt-1 mb-6">
-            Please select your login method
+          <p className="text-xs text-center text-gray-500 dark:text-[#a1a1aa] mt-1 mb-6">
+            {t("Please select your login method")}
           </p>
 
-          <div className="flex border-b border-gray-200 mb-6">
+          <div className="flex border-b border-gray-200 dark:border-[#27272a] mb-6">
             <button
               onClick={() => {
                 setTab("admin");
@@ -102,8 +154,8 @@ export const Login = () => {
                 setOtpCode("");
               }}
               className={`flex-1 pb-2 text-sm font-medium transition-colors ${tab === "admin"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-400"
+                ? "text-blue-600 border-b-2 border-blue-600 dark:text-blue-400 dark:border-blue-400"
+                : "text-gray-400 dark:text-[#71717a]"
                 }`}
             >
               Admin
@@ -111,8 +163,8 @@ export const Login = () => {
             <button
               onClick={() => setTab("staff")}
               className={`flex-1 pb-2 text-sm font-medium transition-colors ${tab === "staff"
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-400"
+                ? "text-blue-600 border-b-2 border-blue-600 dark:text-blue-400 dark:border-blue-400"
+                : "text-gray-400 dark:text-[#71717a]"
                 }`}
             >
               Staff
@@ -124,14 +176,14 @@ export const Login = () => {
               /* ─── 2FA OTP Verification ─── */
               <div className="space-y-4">
                 <div className="flex flex-col items-center mb-2">
-                  <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-3">
-                    <ShieldCheck className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-3 transition-colors">
+                    <ShieldCheck className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <h3 className="text-sm font-semibold text-gray-900">
-                    Ikki bosqichli tasdiqlash
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-[#fafafa]">
+                    {t("Ikki bosqichli tasdiqlash")}
                   </h3>
-                  <p className="text-xs text-gray-500 text-center mt-1">
-                    Telefoningizga yuborilgan kodni kiriting
+                  <p className="text-xs text-gray-500 dark:text-[#a1a1aa] text-center mt-1">
+                    {t("Telefoningizga yuborilgan kodni kiriting")}
                   </p>
                 </div>
 
@@ -145,7 +197,7 @@ export const Login = () => {
                       setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))
                     }
                     placeholder="000000"
-                    className="w-full text-center tracking-[0.5em] px-3 py-3 border border-gray-200 rounded-lg text-lg font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                    className="w-full text-center tracking-[0.5em] px-3 py-3 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] dark:text-[#fafafa] rounded-lg text-lg font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors"
                   />
                 </div>
 
@@ -154,7 +206,7 @@ export const Login = () => {
                   disabled={verify2Fa.isPending || otpCode.length < 4}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50"
                 >
-                  {verify2Fa.isPending ? "Tekshirilmoqda..." : "TASDIQLASH"}
+                  {verify2Fa.isPending ? t("Tekshirilmoqda...") : t("TASDIQLASH")}
                 </button>
 
                 <button
@@ -162,9 +214,9 @@ export const Login = () => {
                     setTwoFaAdminId(null);
                     setOtpCode("");
                   }}
-                  className="w-full text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                  className="w-full text-sm text-gray-500 dark:text-[#a1a1aa] hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
-                  ← Orqaga qaytish
+                  {t("← Orqaga qaytish")}
                 </button>
               </div>
             ) : (
@@ -174,15 +226,15 @@ export const Login = () => {
                 className="space-y-4"
               >
                 <div>
-                  <label className="text-xs font-medium text-gray-600">
-                    Telefon raqami
+                  <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">
+                    {t("Telefon raqami")}
                   </label>
                   <div className="relative mt-1">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-[#71717a]" />
                     <input
                       {...form.register("phoneNumber")}
                       placeholder="+998901234567"
-                      className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                      className="w-full pl-9 pr-3 py-2.5 bg-white dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] rounded-lg text-sm text-gray-900 dark:text-[#fafafa] focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors"
                     />
                   </div>
                   {form.formState.errors.phoneNumber && (
@@ -193,21 +245,21 @@ export const Login = () => {
                 </div>
 
                 <div>
-                  <label className="text-xs font-medium text-gray-600">
-                    Parol
+                  <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">
+                    {t("Parol")}
                   </label>
                   <div className="relative mt-1">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-[#71717a]" />
                     <input
                       type={showPassword ? "text" : "password"}
                       {...form.register("password")}
                       placeholder="••••••••"
-                      className="w-full pl-9 pr-10 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+                      className="w-full pl-9 pr-10 py-2.5 bg-white dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] rounded-lg text-sm text-gray-900 dark:text-[#fafafa] focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-[#fafafa] transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -224,7 +276,7 @@ export const Login = () => {
                   disabled={adminLogin.isPending}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition-colors disabled:opacity-50"
                 >
-                  {adminLogin.isPending ? "Kirilmoqda..." : "LOGIN TO DASHBOARD"}
+                  {adminLogin.isPending ? t("Kirilmoqda...") : t("LOGIN TO DASHBOARD")}
                 </button>
               </form>
             )
@@ -234,9 +286,9 @@ export const Login = () => {
                 {[0, 1, 2, 3].map((i) => (
                   <span
                     key={i}
-                    className={`w-3 h-3 rounded-full border-2 ${i < pin.length
-                      ? "bg-blue-600 border-blue-600"
-                      : "border-gray-300"
+                    className={`w-3 h-3 rounded-full border-2 transition-colors ${i < pin.length
+                      ? "bg-blue-600 border-blue-600 dark:bg-blue-500 dark:border-blue-500"
+                      : "border-gray-300 dark:border-[#3f3f46]"
                       }`}
                   />
                 ))}
@@ -248,39 +300,39 @@ export const Login = () => {
                     key={d}
                     onClick={() => handlePinPress(d)}
                     disabled={staffLogin.isPending}
-                    className="h-12 rounded-lg bg-gray-50 border border-gray-200 text-gray-700 font-medium hover:bg-gray-100 transition-colors"
+                    className="h-12 rounded-lg bg-gray-50 dark:bg-[#27272a] border border-gray-200 dark:border-[#3f3f46] text-gray-700 dark:text-[#fafafa] font-medium hover:bg-gray-100 dark:hover:bg-[#3f3f46] transition-colors"
                   >
                     {d}
                   </button>
                 ))}
                 <button
                   onClick={handleBackspace}
-                  className="h-12 rounded-lg bg-red-50 border border-red-100 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors"
+                  className="h-12 rounded-lg bg-red-50 dark:bg-rose-950/30 border border-red-100 dark:border-rose-900/50 text-red-500 dark:text-rose-400 flex items-center justify-center hover:bg-red-100 dark:hover:bg-rose-900/50 transition-colors"
                 >
                   <Delete size={16} />
                 </button>
                 <button
                   onClick={() => handlePinPress("0")}
                   disabled={staffLogin.isPending}
-                  className="h-12 rounded-lg bg-gray-50 border border-gray-200 text-gray-700 font-medium hover:bg-gray-100 transition-colors"
+                  className="h-12 rounded-lg bg-gray-50 dark:bg-[#27272a] border border-gray-200 dark:border-[#3f3f46] text-gray-700 dark:text-[#fafafa] font-medium hover:bg-gray-100 dark:hover:bg-[#3f3f46] transition-colors"
                 >
                   0
                 </button>
-                <div className="h-12 rounded-lg bg-green-50 border border-green-100 text-green-600 flex items-center justify-center">
+                <div className="h-12 rounded-lg bg-green-50 dark:bg-emerald-950/30 border border-green-100 dark:border-emerald-900/50 text-green-600 dark:text-emerald-400 flex items-center justify-center transition-colors">
                   <Check size={16} />
                 </div>
               </div>
 
-              <p className="text-center text-xs text-gray-500 mt-4">
-                Enter your 4-digit employee PIN to clock in.
+              <p className="text-center text-xs text-gray-500 dark:text-[#a1a1aa] mt-4">
+                {t("Enter your 4-digit employee PIN to clock in.")}
               </p>
             </div>
           )}
 
           {generalData?.contactPhone && (
-            <div className="mt-8 text-center border-t border-gray-100 pt-5">
-              <p className="text-xs text-gray-400 font-medium">Texnik yordam va savollar uchun:</p>
-              <p className="text-sm font-bold text-gray-600 mt-0.5">{generalData.contactPhone}</p>
+            <div className="mt-8 text-center border-t border-gray-100 dark:border-[#27272a] pt-5 transition-colors">
+              <p className="text-xs text-gray-400 dark:text-[#71717a] font-medium">{t("Texnik yordam va savollar uchun:")}</p>
+              <p className="text-sm font-bold text-gray-600 dark:text-[#a1a1aa] mt-0.5">{generalData.contactPhone}</p>
             </div>
           )}
         </div>

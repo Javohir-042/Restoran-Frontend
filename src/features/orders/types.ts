@@ -20,6 +20,7 @@ export interface IBill {
     totalAmount: number;
     table: ITable | null;
     openedByStaff: IStaffRef | null;
+    orderItems?: IOrderItem[];
     createdAt: string;
     updatedAt: string;
 }

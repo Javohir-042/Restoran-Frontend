@@ -19,6 +19,13 @@ export function computeOrderStatus(bill: IBill, items: IOrderItem[]): string {
     return "Yangi";
 }
 
+/* ── Items Label Computation ── */
+const computeItemsLabel = (items: IOrderItem[]) => {
+    if (items.length === 0) return "Taom yo'q";
+    const mapped = items.map((i) => `${i.quantity}x ${i.menuItem.name}`);
+    return mapped.join(", ");
+};
+
 /* ── Fetch all orders (bills + items) ── */
 export const useOrdersList = () => {
     const billsQuery = useQuery({
@@ -32,37 +39,32 @@ export const useOrdersList = () => {
     const bills = billsQuery.data ?? [];
 
     const ordersQuery = useQuery({
-        queryKey: ["orders-with-items", bills.map((b) => b.id)],
+        queryKey: ["orders-with-items-bulk", bills.map((b) => b.id).join(',')],
         queryFn: async (): Promise<IOrderRow[]> => {
-            return Promise.all(
-                bills.map(async (bill) => {
-                    const items = await API.get<IApiResponse<IOrderItem[]>>(
-                        ORDERS_API.ORDER_ITEMS_BY_BILL(bill.id)
-                    ).then((r) => r.data.data);
+            return bills.map((bill) => {
+                const items = bill.orderItems || [];
+                const staffName = bill.openedByStaff
+                    ? `${bill.openedByStaff.firstName} ${bill.openedByStaff.lastName}`
+                    : "Noma'lum";
 
-                    const staffName = bill.openedByStaff
-                        ? `${bill.openedByStaff.firstName} ${bill.openedByStaff.lastName}`
-                        : "Mijoz";
+                const staffInitials = bill.openedByStaff
+                    ? `${bill.openedByStaff.firstName.charAt(0)}${bill.openedByStaff.lastName.charAt(0)}`.toUpperCase()
+                    : "?";
 
-                    const staffInitials = bill.openedByStaff
-                        ? bill.openedByStaff.firstName.charAt(0) +
-                        bill.openedByStaff.lastName.charAt(0)
-                        : "M";
+                const computedStatus = computeOrderStatus(bill, items);
+                const itemsLabel = computeItemsLabel(items);
+                const itemsCount = items.length;
 
-                    return {
-                        bill,
-                        items,
-                        itemsCount: items.length,
-                        itemsLabel:
-                            items
-                                .map((i) => `${i.menuItem.name} (${i.quantity})`)
-                                .join(", ") || "Taom yo'q",
-                        staffName,
-                        staffInitials,
-                        computedStatus: computeOrderStatus(bill, items),
-                    };
-                })
-            );
+                return {
+                    bill,
+                    items,
+                    staffName,
+                    staffInitials,
+                    computedStatus,
+                    itemsLabel,
+                    itemsCount,
+                };
+            });
         },
         enabled: bills.length > 0,
     });

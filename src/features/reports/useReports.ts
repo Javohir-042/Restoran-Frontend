@@ -1,11 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import API from "@/config/request";
 
-const toISO = (d: Date) => d.toISOString().slice(0, 10);
+const toISO = (d: Date) => {
+  const tzOffsetMs = d.getTimezoneOffset() * 60000;
+  const localTimeMs = d.getTime() - tzOffsetMs;
+  return new Date(localTimeMs).toISOString().slice(0, 10);
+};
 
-export const useReports = () => {
+export type ReportPeriod = "week" | "month" | "year";
+
+export const useReports = (period: ReportPeriod = "week") => {
   const today = toISO(new Date());
-  const weekAgo = toISO(new Date(Date.now() - 6 * 86_400_000));
 
   const todaySummary = useQuery({
     queryKey: ["reports", "summary", today],
@@ -17,13 +22,25 @@ export const useReports = () => {
     },
   });
 
-  const weeklyRevenue = useQuery({
-    queryKey: ["reports", "revenue", "daily", weekAgo, today],
+  const chartQuery = useQuery({
+    queryKey: ["reports", "chart", period, today],
     queryFn: async () => {
-      const { data } = await API.get(
-        `/reports/revenue/daily?from=${weekAgo}&to=${today}`
-      );
-      return data.data || [];
+      if (period === "week") {
+        const weekAgo = toISO(new Date(Date.now() - 6 * 86_400_000));
+        const { data } = await API.get(`/reports/revenue/daily?from=${weekAgo}&to=${today}`);
+        return data.data || [];
+      } else if (period === "month") {
+        const monthAgo = toISO(new Date(Date.now() - 29 * 86_400_000));
+        const { data } = await API.get(`/reports/revenue/daily?from=${monthAgo}&to=${today}`);
+        return data.data || [];
+      } else {
+        const lastYear = new Date();
+        lastYear.setMonth(lastYear.getMonth() - 11);
+        lastYear.setDate(1);
+        const yearAgo = toISO(lastYear);
+        const { data } = await API.get(`/reports/revenue/monthly?from=${yearAgo}&to=${today}`);
+        return data.data || [];
+      }
     },
   });
 
@@ -35,5 +52,5 @@ export const useReports = () => {
     },
   });
 
-  return { todaySummary, weeklyRevenue, topItems };
+  return { todaySummary, chartData: chartQuery, topItems };
 };

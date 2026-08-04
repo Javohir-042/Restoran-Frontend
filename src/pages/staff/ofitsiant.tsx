@@ -9,8 +9,10 @@ import { ActiveBill } from "../../features/waiter/components/ActiveBill";
 import { ReadyItemsDrawer } from "../../features/waiter/components/ReadyItemsDrawer";
 import { WaiterMenuModal } from "../../features/waiter/components/WaiterMenuModal";
 import type { ITable } from "../../features/restaurant-table/types";
+import { useLanguage } from "../../context/LanguageContext";
 
 export const OfitsiantPage = () => {
+    const { t } = useLanguage();
     const { data: tables = [], isLoading: tablesLoading } = useTables();
     const { data: readyItems = [] } = useReadyItems();
     const { isConnected } = useWaiterSocket();
@@ -55,19 +57,23 @@ export const OfitsiantPage = () => {
     }
 
     return (
-        <div className="h-full flex flex-col md:flex-row gap-4 p-1 overflow-hidden relative">
+        <div className="h-full flex flex-col md:flex-row gap-4 p-1 overflow-hidden relative pt-2">
             {headerActions}
 
             {/* Left Column: Tables Grid */}
-            <div className="md:w-1/2 lg:w-3/5 flex flex-col h-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-4 border-b border-gray-100 shrink-0 flex justify-between items-center bg-gray-50/50">
-                    <h2 className="text-xl font-black rounded-lg uppercase text-gray-800">
-                        STOLLAR
+            <div className="md:w-1/2 lg:w-3/5 flex flex-col h-full bg-white dark:bg-[#0a0a0f]/60 dark:backdrop-blur-2xl rounded-2xl shadow-sm dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-gray-100 dark:border-white/5 overflow-hidden transition-all">
+                <div className="p-5 border-b border-gray-100 dark:border-white/5 shrink-0 flex justify-between items-center bg-gray-50/50 dark:bg-white/[0.02]">
+                    <h2 className="text-xl font-black rounded-lg uppercase text-gray-800 dark:text-[#fafafa]">
+                        {t("STOLLAR")}
                     </h2>
                     {isConnected ? (
-                        <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-1 rounded">LIVE</span>
+                        <span className="text-xs font-bold text-green-700 dark:text-emerald-400 bg-green-100 dark:bg-emerald-500/10 px-3 py-1.5 rounded-md border border-transparent dark:border-emerald-500/20 shadow-inner">
+                            {t("LIVE")}
+                        </span>
                     ) : (
-                        <span className="text-xs font-bold text-gray-500 border px-2 py-1 rounded">OFFLINE</span>
+                        <span className="text-xs font-bold text-gray-500 dark:text-[#a1a1aa] bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 px-3 py-1.5 rounded-md">
+                            {t("OFFLINE")}
+                        </span>
                     )}
                 </div>
                 <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
@@ -87,8 +93,8 @@ export const OfitsiantPage = () => {
                         onAddItemClick={handleOpenMenu}
                     />
                 ) : (
-                    <div className="h-full flex items-center justify-center bg-white rounded-2xl border border-dashed border-gray-300 text-gray-400 font-medium">
-                        CHAP TOMONDAN STOL TANLANG
+                    <div className="h-full flex items-center justify-center bg-white dark:bg-[#0a0a0f]/40 dark:backdrop-blur-md rounded-2xl border border-dashed border-gray-300 dark:border-white/10 text-gray-400 dark:text-[#71717a] font-medium shadow-sm transition-all text-center px-4">
+                        {t("CHAP TOMONDAN STOL TANLANG")}
                     </div>
                 )}
             </div>

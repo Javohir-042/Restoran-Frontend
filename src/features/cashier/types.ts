@@ -8,6 +8,7 @@ export interface ICashierBill {
         id: string;
         tableNumber: number;
     };
+    orderItems?: ICashierOrderItem[];
 }
 
 export interface ICashierOrderItem {

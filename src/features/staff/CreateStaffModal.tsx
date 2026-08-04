@@ -5,6 +5,7 @@ import { z } from "zod";
 import { X, Camera, Eye, EyeOff } from "lucide-react";
 import { createStaffSchema } from "./schema";
 import { useCreateStaff } from "./useStaff";
+import { useLanguage } from "@/context/LanguageContext";
 
 type StaffFormValues = z.infer<typeof createStaffSchema>;
 
@@ -14,6 +15,7 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
     const [showPin, setShowPin] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const createStaff = useCreateStaff();
+    const { t } = useLanguage();
 
     const form = useForm<StaffFormValues>({
         resolver: zodResolver(createStaffSchema),
@@ -42,10 +44,10 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
 
     return (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-            <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md max-h-[92vh] overflow-y-auto">
+            <div className="bg-white dark:bg-[#18181b] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md max-h-[92vh] overflow-y-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 sticky top-0 bg-white z-10">
-                    <h2 className="text-base font-semibold text-gray-900">Yangi xodim qo'shish</h2>
+                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-[#27272a] sticky top-0 bg-white dark:bg-[#18181b] z-10">
+                    <h2 className="text-base font-semibold text-gray-900 dark:text-[#fafafa]">{t("Yangi xodim qo'shish")}</h2>
                     <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -60,7 +62,7 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="w-20 h-20 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden hover:border-blue-400 transition-colors"
+                            className="w-20 h-20 rounded-full bg-gray-100 dark:bg-[#27272a] border-2 border-dashed border-gray-300 dark:border-[#3f3f46] flex items-center justify-center overflow-hidden hover:border-blue-400 transition-colors"
                         >
                             {avatarPreview ? (
                                 <img
@@ -84,10 +86,10 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
                     {/* Name fields */}
                     <div className="grid grid-cols-2 gap-3">
                         <div>
-                            <label className="text-xs font-medium text-gray-600">Ism</label>
+                            <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("Ism")}</label>
                             <input
                                 {...form.register("firstName")}
-                                className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                                className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
                             />
                             {form.formState.errors.firstName && (
                                 <p className="text-xs text-red-500 mt-1">
@@ -96,10 +98,10 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
                             )}
                         </div>
                         <div>
-                            <label className="text-xs font-medium text-gray-600">Familiya</label>
+                            <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("Familiya")}</label>
                             <input
                                 {...form.register("lastName")}
-                                className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                                className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
                             />
                             {form.formState.errors.lastName && (
                                 <p className="text-xs text-red-500 mt-1">
@@ -111,13 +113,13 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
 
                     {/* Phone */}
                     <div>
-                        <label className="text-xs font-medium text-gray-600">
-                            Telefon raqami (ixtiyoriy)
+                        <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">
+                            {t("Telefon raqami (ixtiyoriy)")}
                         </label>
                         <input
                             {...form.register("phoneNumber")}
                             placeholder="+998901234567"
-                            className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
+                            className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
                         />
                         {form.formState.errors.phoneNumber && (
                             <p className="text-xs text-red-500 mt-1">
@@ -128,15 +130,15 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
 
                     {/* Role */}
                     <div>
-                        <label className="text-xs font-medium text-gray-600">Rol</label>
+                        <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("Rol")}</label>
                         <select
                             {...form.register("role")}
-                            className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300 bg-white"
+                            className="w-full mt-1 px-3 py-2 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300"
                         >
-                            <option value="">Tanlang...</option>
-                            <option value="OFITSIANT">Ofitsiant</option>
-                            <option value="OSHPAZ">Oshpaz</option>
-                            <option value="KASSIR">Kassir</option>
+                            <option value="">{t("Tanlang...")}</option>
+                            <option value="OFITSIANT">{t("Ofitsiant")}</option>
+                            <option value="OSHPAZ">{t("Oshpaz")}</option>
+                            <option value="KASSIR">{t("Kassir")}</option>
                         </select>
                         {form.formState.errors.role && (
                             <p className="text-xs text-red-500 mt-1">
@@ -147,7 +149,7 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
 
                     {/* PIN */}
                     <div>
-                        <label className="text-xs font-medium text-gray-600">PIN kod (4 xonali)</label>
+                        <label className="text-xs font-medium text-gray-600 dark:text-[#a1a1aa]">{t("PIN kod (4 xonali)")}</label>
                         <div className="relative mt-1">
                             <input
                                 {...form.register("pinCode")}
@@ -155,7 +157,7 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
                                 maxLength={4}
                                 inputMode="numeric"
                                 placeholder="••••"
-                                className="w-full px-3 py-2 pr-10 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300 tracking-widest"
+                                className="w-full px-3 py-2 pr-10 border border-gray-200 dark:border-[#27272a] bg-white dark:bg-[#18181b] text-gray-900 dark:text-[#fafafa] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-300 tracking-widest"
                             />
                             <button
                                 type="button"
@@ -177,16 +179,16 @@ export const CreateStaffModal = ({ onClose }: { onClose: () => void }) => {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                            className="flex-1 py-2.5 rounded-lg border border-gray-200 dark:border-[#27272a] text-sm text-gray-600 dark:text-[#a1a1aa] hover:bg-gray-50 dark:hover:bg-[#27272a] transition-colors"
                         >
-                            Bekor qilish
+                            {t("Bekor qilish")}
                         </button>
                         <button
                             type="submit"
                             disabled={createStaff.isPending}
                             className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
                         >
-                            {createStaff.isPending ? "Saqlanmoqda..." : "Qo'shish"}
+                            {createStaff.isPending ? t("Saqlanmoqda...") : t("Qo'shish")}
                         </button>
                     </div>
                 </form>

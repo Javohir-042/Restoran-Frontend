@@ -2,6 +2,7 @@ import { X, Download } from "lucide-react";
 import type { ITable } from "./types";
 import { QRCodeSVG } from 'qrcode.react';
 import { useRef } from 'react';
+import { useLanguage } from "@/context/LanguageContext";
 
 export const QrModal = ({
   table,
@@ -13,6 +14,7 @@ export const QrModal = ({
   // Use the exact origin the frontend is running on, so any device scanning will go to this network/URL
   const qrUrl = `${window.location.origin}/table/${table.id}`;
   const qrRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   const handleDownload = () => {
     // Generate an image from the SVG element
@@ -51,22 +53,22 @@ export const QrModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-xs text-center p-6 shadow-2xl">
+      <div className="bg-white dark:bg-[#18181b] rounded-2xl w-full max-w-xs text-center p-6 shadow-2xl border border-gray-100 dark:border-[#27272a]">
         <div className="flex justify-end mb-1">
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-[#fafafa] transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
-        <h2 className="text-lg font-bold text-gray-900 mb-1">
-          Stol {table.tableNumber}
+        <h2 className="text-lg font-bold text-gray-900 dark:text-[#fafafa] mb-1">
+          {t("Stol")} {table.tableNumber}
         </h2>
 
-        <p className="text-xs text-blue-600 font-medium mb-5 bg-blue-50 py-1.5 px-3 rounded-full mx-auto w-max">
-          Mijoz skanerlab, menyuga kiradi
+        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-5 bg-blue-50 dark:bg-blue-500/10 py-1.5 px-3 rounded-full mx-auto w-max">
+          {t("Mijoz skanerlab, menyuga kiradi")}
         </p>
 
         <div className="flex justify-center mb-6" ref={qrRef}>
@@ -81,10 +83,11 @@ export const QrModal = ({
         </div>
 
         {qrUrl.includes("localhost") && (
-          <div className="mb-4 text-left bg-orange-50 border border-orange-100 p-3 rounded-lg">
-            <p className="text-xs text-orange-800 font-medium leading-relaxed">
-              <span className="font-bold">Eslatma:</span> Siz hozir <span className="font-mono bg-orange-100 px-1 text-[10px]">localhost</span> dasiz.
-              Telefonda skaner qilish uchun loyihani aynan IP manzil (masalan, <span className="font-mono bg-orange-100 px-1 text-[10px]">192.168.X.X:5173</span>) orqali ochib, so'ngra u yerdagi QR ni skaner qiling yoki Vercel linkdan kiring!
+          <div className="mb-4 text-left bg-orange-50 border border-orange-100 p-3 rounded-lg dark:bg-orange-500/10 dark:border-orange-500/20">
+            <p className="text-xs text-orange-800 dark:text-orange-400 font-medium leading-relaxed">
+              {t("Eslatma: Siz hozir localhost dasiz.")}
+              <br />
+              {t("Telefonda skaner qilish uchun loyihani aynan IP manzil (masalan, ")}<span className="font-mono bg-orange-100 dark:bg-orange-500/20 px-1 text-[10px]">192.168.X.X:5173</span>{t(") orqali ochib, so'ngra u yerdagi QR ni skaner qiling yoki Vercel linkdan kiring!")}
             </p>
           </div>
         )}
@@ -94,7 +97,7 @@ export const QrModal = ({
           className="w-full py-3 inline-flex items-center justify-center gap-2 text-sm text-white bg-blue-600 rounded-xl font-semibold shadow-md shadow-blue-500/20 hover:bg-blue-700 active:bg-blue-800 transition-all"
         >
           <Download size={16} />
-          QR kodni yuklab olish
+          {t("QR kodni yuklab olish")}
         </button>
       </div>
     </div>

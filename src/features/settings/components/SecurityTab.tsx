@@ -7,6 +7,7 @@ import API from "@/config/request";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type { AxiosErrorResponse } from "@/types/types";
 import { useToggle2FA } from "../useSettings";
+import { useLanguage } from "@/context/LanguageContext";
 
 const formSchema = z
     .object({
@@ -26,6 +27,7 @@ export const SecurityTab = () => {
         queryKey: ["admin", "me"],
         queryFn: () => API.get("/admins/me").then((res) => res.data.data),
     });
+    const { t } = useLanguage();
 
     const { mutate: toggle2FA, isPending: isToggling2FA } = useToggle2FA();
 
@@ -65,21 +67,21 @@ export const SecurityTab = () => {
             {/* Password Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div>
-                    <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 border-b border-gray-100 pb-4">
+                    <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-[#fafafa] border-b border-gray-100 dark:border-[#27272a] pb-4">
                         <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
                             <Lock className="w-5 h-5" />
                         </div>
-                        Parolni o'zgartirish
+                        {t("Parolni o'zgartirish")}
                     </h3>
                 </div>
 
                 <div className="max-w-md space-y-5 pt-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Hozirgi parol</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-[#f4f4f5]">{t("Hozirgi parol")}</label>
                         <input
                             type="password"
                             {...register("oldPassword")}
-                            className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db] transition-all hover:bg-gray-50"
+                            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] rounded-xl text-gray-900 dark:text-[#fafafa] placeholder:text-gray-400 dark:placeholder:text-[#71717a] focus:bg-white dark:focus:bg-[#1e1e1e] focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db]/50 transition-all"
                             placeholder="••••••••"
                         />
                         {errors.oldPassword && (
@@ -88,11 +90,11 @@ export const SecurityTab = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Yangi parol</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-[#f4f4f5]">{t("Yangi parol")}</label>
                         <input
                             type="password"
                             {...register("newPassword")}
-                            className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db] transition-all hover:bg-gray-50"
+                            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] rounded-xl text-gray-900 dark:text-[#fafafa] placeholder:text-gray-400 dark:placeholder:text-[#71717a] focus:bg-white dark:focus:bg-[#1e1e1e] focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db]/50 transition-all"
                             placeholder="••••••••"
                         />
                         {errors.newPassword && (
@@ -101,11 +103,11 @@ export const SecurityTab = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Yangi parolni tasdiqlash</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-[#f4f4f5]">{t("Yangi parolni tasdiqlash")}</label>
                         <input
                             type="password"
                             {...register("confirmPassword")}
-                            className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db] transition-all hover:bg-gray-50"
+                            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] rounded-xl text-gray-900 dark:text-[#fafafa] placeholder:text-gray-400 dark:placeholder:text-[#71717a] focus:bg-white dark:focus:bg-[#1e1e1e] focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db]/50 transition-all"
                             placeholder="••••••••"
                         />
                         {errors.confirmPassword && (
@@ -118,9 +120,9 @@ export const SecurityTab = () => {
                     <button
                         type="button"
                         onClick={() => reset()}
-                        className="px-5 py-2.5 rounded-xl text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
+                        className="px-5 py-2.5 rounded-xl text-gray-700 dark:text-[#f4f4f5] bg-white dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] hover:bg-gray-50 dark:hover:bg-[#27272a] dark:bg-[#27272a]/50 hover:text-gray-900 dark:text-[#fafafa] transition-all font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
                     >
-                        Bekor qilish
+                        {t("Bekor qilish")}
                     </button>
                     <button
                         type="submit"
@@ -128,21 +130,21 @@ export const SecurityTab = () => {
                         className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-[#1a56db] text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all font-semibold shadow-md shadow-blue-500/20 flex items-center gap-2 disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                         <Save className="w-4 h-4" />
-                        {isChangingPassword ? "Saqlanmoqda..." : "Saqlash"}
+                        {isChangingPassword ? t("Saqlanmoqda...") : t("Saqlash")}
                     </button>
                 </div>
             </form>
 
             {/* 2FA Toggle */}
-            <div className="border border-green-100/60 rounded-2xl p-6 bg-gradient-to-r from-green-50/50 to-emerald-50/30 flex items-start justify-between shadow-sm ring-1 ring-black/[0.02]">
+            <div className="border border-green-100/60 dark:border-green-900/40 rounded-2xl p-6 bg-gradient-to-r from-green-50/50 dark:from-green-900/20 to-emerald-50/30 dark:to-emerald-900/10 flex items-start justify-between shadow-sm ring-1 ring-black/[0.02] dark:ring-white/[0.02]">
                 <div className="flex gap-4">
-                    <div className="mt-1 w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0 shadow-sm border border-green-200/50">
-                        <ShieldCheck className="w-6 h-6 text-green-600" />
+                    <div className="mt-1 w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0 shadow-sm border border-green-200/50 dark:border-green-800/50">
+                        <ShieldCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                        <h3 className="text-base font-bold text-gray-900">Ikki bosqichli autentifikatsiya (2FA)</h3>
-                        <p className="text-sm text-gray-500 mt-1.5 max-w-md leading-relaxed">
-                            Tizimga kirishda joriy paroldan tashqari qo'shimcha maxsus xavfsizlik kodini kiritish zarur bo'ladi. Bu akkauntingiz xavfsizligini sezilarli darajada oshiradi.
+                        <h3 className="text-base font-bold text-gray-900 dark:text-[#fafafa]">{t("Ikki bosqichli autentifikatsiya (2FA)")}</h3>
+                        <p className="text-sm text-gray-500 dark:text-[#a1a1aa] mt-1.5 max-w-md leading-relaxed">
+                            {t("Tizimga kirishda joriy paroldan tashqari qo'shimcha maxsus xavfsizlik kodini kiritish zarur bo'ladi. Bu akkauntingiz xavfsizligini sezilarli darajada oshiradi.")}
                         </p>
                     </div>
                 </div>
@@ -153,7 +155,7 @@ export const SecurityTab = () => {
                     aria-checked={is2FAEnabled}
                     disabled={isToggling2FA}
                     onClick={() => toggle2FA()}
-                    className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mt-2 ${is2FAEnabled ? "bg-green-500" : "bg-gray-300"
+                    className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mt-2 ${is2FAEnabled ? "bg-green-500" : "bg-gray-300 dark:bg-[#3f3f46]"
                         } ${isToggling2FA ? "opacity-50" : ""}`}
                 >
                     <span

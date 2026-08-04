@@ -4,6 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save, BellDot, ChefHat, Package } from "lucide-react";
 import { useNotificationSettings, useUpdateNotificationSettings } from "../useSettings";
+import { useLanguage } from "@/context/LanguageContext";
 
 const formSchema = z.object({
     notifyNewOrder: z.boolean(),
@@ -16,6 +17,7 @@ type FormValues = z.infer<typeof formSchema>;
 export const NotificationsTab = () => {
     const { data: notificationsData, isLoading } = useNotificationSettings();
     const { mutate: updateNotifications, isPending } = useUpdateNotificationSettings();
+    const { t } = useLanguage();
 
     const { handleSubmit, reset, watch, setValue } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -49,18 +51,18 @@ export const NotificationsTab = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-6">
-                <h3 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-4">Bildirishnoma sozlamalari</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-[#fafafa] border-b border-gray-100 dark:border-[#27272a] pb-4">{t("Bildirishnoma sozlamalari")}</h3>
 
                 <div className="grid gap-4">
                     {/* Item 1 */}
-                    <div className="flex justify-between items-center p-5 border border-gray-100 bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] rounded-2xl hover:border-blue-100 transition-colors">
+                    <div className="flex justify-between items-center p-5 border border-gray-100 dark:border-[#27272a] bg-white dark:bg-[#18181b] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] rounded-2xl hover:border-blue-100 dark:hover:border-blue-500/30 transition-colors">
                         <div className="flex gap-4 items-center">
                             <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
                                 <BellDot className="w-5 h-5" />
                             </div>
                             <div>
-                                <h4 className="text-sm font-bold text-gray-900">Yangi buyurtma bildirishnomasi</h4>
-                                <p className="text-xs text-gray-500 mt-1 max-w-[250px] sm:max-w-md">Mijoz buyurtma berganda dasturda va qurilmada tovushli signal berib ogohlantirish</p>
+                                <h4 className="text-sm font-bold text-gray-900 dark:text-[#fafafa]">{t("Yangi buyurtma bildirishnomasi")}</h4>
+                                <p className="text-xs text-gray-500 dark:text-[#a1a1aa] mt-1 max-w-[250px] sm:max-w-md">{t("Mijoz buyurtma berganda dasturda va qurilmada tovushli signal berib ogohlantirish")}</p>
                             </div>
                         </div>
                         <button
@@ -76,14 +78,14 @@ export const NotificationsTab = () => {
                     </div>
 
                     {/* Item 2 */}
-                    <div className="flex justify-between items-center p-5 border border-gray-100 bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] rounded-2xl hover:border-blue-100 transition-colors">
+                    <div className="flex justify-between items-center p-5 border border-gray-100 dark:border-[#27272a] bg-white dark:bg-[#18181b] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] rounded-2xl hover:border-blue-100 dark:hover:border-blue-500/30 transition-colors">
                         <div className="flex gap-4 items-center">
                             <div className="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center border border-orange-100">
                                 <ChefHat className="w-5 h-5" />
                             </div>
                             <div>
-                                <h4 className="text-sm font-bold text-gray-900">Oshxona tayyorlik signali</h4>
-                                <p className="text-xs text-gray-500 mt-1 max-w-[250px] sm:max-w-md">Oshxonada taom tayyor bo'lganda, tasdiqlovchi xabarni ofitsiantga yuborish</p>
+                                <h4 className="text-sm font-bold text-gray-900 dark:text-[#fafafa]">{t("Oshxona tayyorlik signali")}</h4>
+                                <p className="text-xs text-gray-500 dark:text-[#a1a1aa] mt-1 max-w-[250px] sm:max-w-md">{t("Oshxonada taom tayyor bo'lganda, tasdiqlovchi xabarni ofitsiantga yuborish")}</p>
                             </div>
                         </div>
                         <button
@@ -99,14 +101,14 @@ export const NotificationsTab = () => {
                     </div>
 
                     {/* Item 3 */}
-                    <div className="flex justify-between items-center p-5 border border-gray-100 bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] rounded-2xl hover:border-blue-100 transition-colors">
+                    <div className="flex justify-between items-center p-5 border border-gray-100 dark:border-[#27272a] bg-white dark:bg-[#18181b] shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] rounded-2xl hover:border-blue-100 dark:hover:border-blue-500/30 transition-colors">
                         <div className="flex gap-4 items-center">
                             <div className="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center border border-rose-100">
                                 <Package className="w-5 h-5" />
                             </div>
                             <div>
-                                <h4 className="text-sm font-bold text-gray-900">Inventarizatsiya ogohlantirishlari</h4>
-                                <p className="text-xs text-gray-500 mt-1 max-w-[250px] sm:max-w-md">Ombordagi zaxiralar belgilan miqdordan kam qolganda avtomatik xabar berish</p>
+                                <h4 className="text-sm font-bold text-gray-900 dark:text-[#fafafa]">{t("Inventarizatsiya ogohlantirishlari")}</h4>
+                                <p className="text-xs text-gray-500 dark:text-[#a1a1aa] mt-1 max-w-[250px] sm:max-w-md">{t("Ombordagi zaxiralar belgilan miqdordan kam qolganda avtomatik xabar berish")}</p>
                             </div>
                         </div>
                         <button
@@ -123,7 +125,7 @@ export const NotificationsTab = () => {
                 </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-6 border-t border-gray-100 mt-8">
+            <div className="flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-[#27272a] mt-8">
                 <button
                     type="button"
                     onClick={() => {
@@ -135,9 +137,9 @@ export const NotificationsTab = () => {
                             });
                         }
                     }}
-                    className="px-5 py-2.5 rounded-xl text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:text-gray-900 transition-all font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
+                    className="px-5 py-2.5 rounded-xl text-gray-700 dark:text-[#f4f4f5] bg-white dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] hover:bg-gray-50 dark:hover:bg-[#27272a] dark:bg-[#27272a]/50 hover:text-gray-900 dark:text-[#fafafa] transition-all font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200"
                 >
-                    Bekor qilish
+                    {t("Bekor qilish")}
                 </button>
                 <button
                     type="submit"
@@ -145,7 +147,7 @@ export const NotificationsTab = () => {
                     className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-[#1a56db] text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all font-semibold shadow-md shadow-blue-500/20 flex items-center gap-2 disabled:opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                     <Save className="w-4 h-4" />
-                    {isPending ? "Saqlanmoqda..." : "Saqlash"}
+                    {isPending ? t("Saqlanmoqda...") : t("Saqlash")}
                 </button>
             </div>
         </form>

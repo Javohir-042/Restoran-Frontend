@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { useCreateCategory } from "./useCategory";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface CreateCategoryModalProps {
     onClose: () => void;
@@ -9,6 +10,7 @@ interface CreateCategoryModalProps {
 export const CreateCategoryModal = ({ onClose }: CreateCategoryModalProps) => {
     const [name, setName] = useState("");
     const [nameRu, setNameRu] = useState("");
+    const { t } = useLanguage();
 
     const { mutateAsync: createCategory, isPending } = useCreateCategory();
 
@@ -25,17 +27,17 @@ export const CreateCategoryModal = ({ onClose }: CreateCategoryModalProps) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-xl">
-                <div className="flex items-center justify-between p-5 sm:p-6 border-b border-gray-100">
+            <div className="bg-white dark:bg-[#18181b] rounded-2xl w-full max-w-md shadow-xl">
+                <div className="flex items-center justify-between p-5 sm:p-6 border-b border-gray-100 dark:border-[#27272a]">
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900">Yangi turkum qo'shish</h2>
-                        <p className="text-sm text-gray-500 mt-1">
-                            Menyu uchun yangi turkum nomlarini kiriting
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-[#fafafa]">{t("Yangi turkum qo'shish")}</h2>
+                        <p className="text-sm text-gray-500 dark:text-[#a1a1aa] mt-1">
+                            {t("Menyu uchun yangi turkum nomlarini kiriting")}
                         </p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-xl transition-colors focus:outline-none"
+                        className="text-gray-400 hover:text-gray-600 dark:hover:text-[#fafafa] hover:bg-gray-100 dark:hover:bg-[#27272a] p-2 rounded-xl transition-colors focus:outline-none"
                     >
                         <X size={20} />
                     </button>
@@ -44,29 +46,29 @@ export const CreateCategoryModal = ({ onClose }: CreateCategoryModalProps) => {
                 <form onSubmit={handleSubmit} className="p-5 sm:p-6">
                     <div className="space-y-4">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                                Turkum nomi (Uzb)
+                            <label className="block text-sm font-semibold text-gray-900 dark:text-[#fafafa] mb-1.5">
+                                {t("Turkum nomi (Uzb)")}
                             </label>
                             <input
                                 required
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder="Masalan: Issiq ovqatlar"
-                                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db] transition-all"
+                                placeholder={t("Masalan: Issiq ovqatlar")}
+                                className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] rounded-xl text-sm text-gray-900 dark:text-[#fafafa] placeholder:text-gray-400 dark:placeholder:text-[#71717a] focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db] transition-all"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-900 mb-1.5">
-                                Turkum nomi (Rus)
+                            <label className="block text-sm font-semibold text-gray-900 dark:text-[#fafafa] mb-1.5">
+                                {t("Turkum nomi (Rus)")}
                             </label>
                             <input
                                 type="text"
                                 value={nameRu}
                                 onChange={(e) => setNameRu(e.target.value)}
-                                placeholder="Masalan: Горячие блюда"
-                                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db] transition-all"
+                                placeholder={t("Masalan: Горячие блюда")}
+                                className="w-full px-4 py-2.5 bg-gray-50 dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] rounded-xl text-sm text-gray-900 dark:text-[#fafafa] placeholder:text-gray-400 dark:placeholder:text-[#71717a] focus:outline-none focus:ring-2 focus:ring-[#1a56db]/20 focus:border-[#1a56db] transition-all"
                             />
                         </div>
                     </div>
@@ -75,9 +77,9 @@ export const CreateCategoryModal = ({ onClose }: CreateCategoryModalProps) => {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-4 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold transition-colors focus:outline-none"
+                            className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-[#27272a] hover:bg-gray-100 dark:hover:bg-[#3f3f46] text-gray-700 dark:text-[#fafafa] rounded-xl text-sm font-semibold transition-colors focus:outline-none"
                         >
-                            Bekor qilish
+                            {t("Bekor qilish")}
                         </button>
                         <button
                             type="submit"
@@ -87,10 +89,10 @@ export const CreateCategoryModal = ({ onClose }: CreateCategoryModalProps) => {
                             {isPending ? (
                                 <>
                                     <Loader2 size={18} className="animate-spin" />
-                                    Saqlanmoqda
+                                    {t("Saqlanmoqda...")}
                                 </>
                             ) : (
-                                "Saqlash"
+                                t("Saqlash")
                             )}
                         </button>
                     </div>

@@ -9,15 +9,12 @@ import {
     ChevronLeft,
     ChevronRight,
 } from "lucide-react";
-import {
-    useStaffList,
-    useToggleStaffActive,
-    useDeleteStaff,
-} from "@/features/staff/useStaff";
+import { useStaffList, useToggleStaffActive, useDeleteStaff } from "@/features/staff/useStaff";
 import { CreateStaffModal } from "@/features/staff/CreateStaffModal";
 import { EditStaffModal } from "@/features/staff/EditStaffModal";
 import { getImageUrl } from "@/lib/get-image-url";
 import type { IStaff } from "@/features/staff/types";
+import { useLanguage } from "@/context/LanguageContext";
 
 /* ── Constants ── */
 const PAGE_SIZE = 10;
@@ -43,13 +40,16 @@ const Skeleton = ({ className = "" }: { className?: string }) => (
     <div className={`animate-pulse bg-gray-100 rounded-lg ${className}`} />
 );
 
-const RoleBadge = ({ role }: { role: string }) => (
-    <span
-        className={`text-[10px] font-semibold px-2 py-1 rounded-md whitespace-nowrap ${ROLE_STYLES[role] ?? "bg-gray-100 text-gray-600"}`}
-    >
-        {ROLE_LABELS[role] ?? role}
-    </span>
-);
+const RoleBadge = ({ role }: { role: string }) => {
+    const { t } = useLanguage();
+    return (
+        <span
+            className={`text-[10px] font-semibold px-2 py-1 rounded-md whitespace-nowrap ${ROLE_STYLES[role] ?? "bg-gray-100 text-gray-600"}`}
+        >
+            {t(ROLE_LABELS[role] ?? role)}
+        </span>
+    );
+};
 
 const ToggleSwitch = ({
     checked,
@@ -81,11 +81,11 @@ const ToggleSwitch = ({
     </button>
 );
 
-/* ── Main Page ── */
 export const StaffPage = () => {
     const { data: staffList = [], isLoading } = useStaffList();
     const toggleActive = useToggleStaffActive();
     const deleteStaff = useDeleteStaff();
+    const { t } = useLanguage();
 
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
@@ -117,7 +117,7 @@ export const StaffPage = () => {
     const confirmDelete = (staff: IStaff) => {
         if (
             window.confirm(
-                `"${staff.firstName} ${staff.lastName}"ni butunlay o'chirasizmi? Bu qaytarib bo'lmaydi.`
+                `"${staff.firstName} ${staff.lastName}" ${t("ni butunlay o'chirasizmi? Bu qaytarib bo'lmaydi.")}`
             )
         ) {
             deleteStaff.mutate(staff.id);
@@ -129,26 +129,26 @@ export const StaffPage = () => {
             {/* ═══ Header ═══ */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-gray-900">
-                        Xodimlar boshqaruvi
+                    <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-[#fafafa]">
+                        {t("Xodimlar boshqaruvi")}
                     </h1>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-                        Jami {activeCount} ta faol xodim
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-[#a1a1aa] mt-0.5">
+                        {t("Jami")} {activeCount} {t("ta faol xodim")}
                     </p>
                 </div>
                 <button
                     onClick={() => setCreateOpen(true)}
-                    className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                    className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm shadow-blue-600/20 active:scale-95"
                 >
                     <UserPlus size={16} />
-                    Yangi xodim qo'shish
+                    {t("Yangi xodim qo'shish")}
                 </button>
             </div>
 
             {/* ═══ Stat Cards ═══ */}
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {/* Total */}
-                <div className="bg-white rounded-xl border border-gray-100 p-3 sm:p-4 flex items-center gap-3">
+                <div className="bg-white dark:bg-[#18181b] rounded-xl border border-gray-100 dark:border-[#27272a] p-3 sm:p-4 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center shrink-0">
                         <Users size={18} className="text-white" />
                     </div>
@@ -156,16 +156,16 @@ export const StaffPage = () => {
                         {isLoading ? (
                             <Skeleton className="h-6 w-8 mb-1" />
                         ) : (
-                            <p className="text-lg sm:text-xl font-bold text-gray-900">
+                            <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-[#fafafa]">
                                 {(staffList as IStaff[]).length}
                             </p>
                         )}
-                        <p className="text-[11px] sm:text-xs text-gray-500">Jami xodimlar</p>
+                        <p className="text-[11px] sm:text-xs text-gray-500 dark:text-[#a1a1aa]">{t("Jami xodimlar")}</p>
                     </div>
                 </div>
 
                 {/* Active */}
-                <div className="bg-white rounded-xl border border-gray-100 p-3 sm:p-4 flex items-center gap-3">
+                <div className="bg-white dark:bg-[#18181b] rounded-xl border border-gray-100 dark:border-[#27272a] p-3 sm:p-4 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
                         <CheckCircle2 size={18} className="text-green-600" />
                     </div>
@@ -173,29 +173,29 @@ export const StaffPage = () => {
                         {isLoading ? (
                             <Skeleton className="h-6 w-8 mb-1" />
                         ) : (
-                            <p className="text-lg sm:text-xl font-bold text-gray-900">
+                            <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-[#fafafa]">
                                 {activeCount}
                             </p>
                         )}
-                        <p className="text-[11px] sm:text-xs text-gray-500">Faol xodimlar</p>
+                        <p className="text-[11px] sm:text-xs text-gray-500 dark:text-[#a1a1aa]">{t("Faol xodimlar")}</p>
                     </div>
                 </div>
 
                 {/* Role breakdown */}
-                <div className="bg-white rounded-xl border border-gray-100 p-3 sm:p-4 col-span-2 lg:col-span-1">
-                    <p className="text-[11px] sm:text-xs text-gray-500 mb-2">Rol bo'yicha</p>
+                <div className="bg-white dark:bg-[#18181b] rounded-xl border border-gray-100 dark:border-[#27272a] p-3 sm:p-4 col-span-2 lg:col-span-1">
+                    <p className="text-[11px] sm:text-xs text-gray-500 dark:text-[#a1a1aa] mb-2">{t("Rol bo'yicha")}</p>
                     {isLoading ? (
                         <Skeleton className="h-5 w-40" />
                     ) : (
                         <div className="flex flex-wrap gap-1.5">
-                            <span className="text-[10px] sm:text-[11px] bg-green-50 text-green-600 px-2 py-0.5 rounded-full font-medium">
-                                Ofitsiant: {roleCount.OFITSIANT}
+                            <span className="text-[10px] sm:text-[11px] bg-green-50 text-green-600 px-2 py-0.5 rounded-md font-medium">
+                                {t("Ofitsiant")}: {roleCount.OFITSIANT}
                             </span>
-                            <span className="text-[10px] sm:text-[11px] bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-medium">
-                                Oshpaz: {roleCount.OSHPAZ}
+                            <span className="text-[10px] sm:text-[11px] bg-orange-50 text-orange-600 px-2 py-0.5 rounded-md font-medium">
+                                {t("Oshpaz")}: {roleCount.OSHPAZ}
                             </span>
-                            <span className="text-[10px] sm:text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
-                                Kassir: {roleCount.KASSIR}
+                            <span className="text-[10px] sm:text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md font-medium">
+                                {t("Kassir")}: {roleCount.KASSIR}
                             </span>
                         </div>
                     )}
@@ -205,21 +205,21 @@ export const StaffPage = () => {
             {/* ═══ Search ═══ */}
             <div className="relative">
                 <Search
-                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-[#71717a]"
                     size={15}
                 />
                 <input
                     type="text"
                     value={search}
                     onChange={(e) => handleSearch(e.target.value)}
-                    placeholder="Xodimlarni qidirish..."
-                    className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300 transition-all"
+                    placeholder={t("Xodimlarni qidirish...")}
+                    className="w-full pl-9 pr-3 py-2.5 bg-white dark:bg-[#18181b] border border-gray-200 dark:border-[#27272a] rounded-xl text-sm text-gray-700 dark:text-[#e4e4e7] placeholder:text-gray-400 dark:text-[#71717a] focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300 transition-all font-medium"
                 />
             </div>
 
             {/* ═══ Table / Cards / States ═══ */}
             {isLoading ? (
-                <div className="bg-white rounded-xl border border-gray-100 p-5">
+                <div className="bg-white dark:bg-[#18181b] rounded-xl border border-gray-100 dark:border-[#27272a] p-5">
                     <div className="space-y-4">
                         {[1, 2, 3, 4, 5].map((i) => (
                             <div key={i} className="flex items-center gap-3">
@@ -234,32 +234,32 @@ export const StaffPage = () => {
                     </div>
                 </div>
             ) : paginated.length === 0 ? (
-                <div className="bg-white rounded-xl border border-gray-100 p-10 text-center">
-                    <p className="text-sm text-gray-400">
+                <div className="bg-white dark:bg-[#18181b] rounded-xl border border-gray-100 dark:border-[#27272a] p-10 text-center">
+                    <p className="text-sm text-gray-400 dark:text-[#71717a]">
                         {search
-                            ? `"${search}" bo'yicha xodim topilmadi`
-                            : "Xodimlar topilmadi"}
+                            ? `"${search}" ${t("bo'yicha xodim topilmadi")}`
+                            : t("Xodimlar topilmadi")}
                     </p>
                 </div>
             ) : (
                 <>
                     {/* ── DESKTOP TABLE (md+) ── */}
-                    <div className="hidden md:block bg-white rounded-xl border border-gray-100 overflow-hidden">
+                    <div className="hidden md:block bg-white dark:bg-[#18181b] rounded-xl border border-gray-100 dark:border-[#27272a] overflow-hidden">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b border-gray-100 text-left text-xs text-gray-500">
-                                    <th className="px-4 py-3 font-medium">Ism</th>
-                                    <th className="px-4 py-3 font-medium">Rol</th>
-                                    <th className="px-4 py-3 font-medium">Telefon</th>
-                                    <th className="px-4 py-3 font-medium">Holati</th>
-                                    <th className="px-4 py-3 font-medium text-right">Amallar</th>
+                                <tr className="border-b border-gray-100 dark:border-[#27272a] text-left text-xs text-gray-500 dark:text-[#a1a1aa]">
+                                    <th className="px-4 py-3 font-medium">{t("Ism")}</th>
+                                    <th className="px-4 py-3 font-medium">{t("Rol")}</th>
+                                    <th className="px-4 py-3 font-medium">{t("Telefon")}</th>
+                                    <th className="px-4 py-3 font-medium">{t("Holati")}</th>
+                                    <th className="px-4 py-3 font-medium text-right">{t("Amallar")}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {paginated.map((staff) => (
                                     <tr
                                         key={staff.id}
-                                        className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors"
+                                        className="border-b border-gray-50 last:border-0 hover:bg-gray-50 dark:hover:bg-[#27272a] dark:bg-[#27272a]/50 transition-colors"
                                     >
                                         {/* Avatar & Name */}
                                         <td className="px-4 py-3">
@@ -272,16 +272,16 @@ export const StaffPage = () => {
                                                             className="w-full h-full object-cover"
                                                         />
                                                     ) : (
-                                                        <span className="text-xs font-semibold text-gray-500">
+                                                        <span className="text-xs font-semibold text-gray-500 dark:text-[#a1a1aa]">
                                                             {staff.firstName.charAt(0)}
                                                         </span>
                                                     )}
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <p className="font-medium text-gray-900 truncate">
+                                                    <p className="font-medium text-gray-900 dark:text-[#fafafa] truncate">
                                                         {staff.firstName} {staff.lastName}
                                                     </p>
-                                                    <p className="text-[11px] text-gray-400">
+                                                    <p className="text-[11px] text-gray-400 dark:text-[#71717a]">
                                                         ID: #{staff.id.slice(0, 6)}
                                                     </p>
                                                 </div>
@@ -312,16 +312,16 @@ export const StaffPage = () => {
                                             <div className="flex items-center justify-end gap-1">
                                                 <button
                                                     onClick={() => setEditStaff(staff)}
-                                                    className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                    title="Tahrirlash"
+                                                    className="p-1.5 text-gray-400 dark:text-[#71717a] hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title={t("Tahrirlash")}
                                                 >
                                                     <Pencil size={15} />
                                                 </button>
                                                 <button
                                                     onClick={() => confirmDelete(staff)}
                                                     disabled={deleteStaff.isPending}
-                                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                                                    title="O'chirish"
+                                                    className="p-1.5 text-gray-400 dark:text-[#71717a] hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                                                    title={t("O'chirish")}
                                                 >
                                                     <Trash2 size={15} />
                                                 </button>
@@ -334,15 +334,17 @@ export const StaffPage = () => {
                     </div>
 
                     {/* ── MOBILE CARDS (< md) ── */}
-                    <div className="md:hidden space-y-3">
+                    <div className="md:hidden space-y-3 sm:space-y-4">
                         {paginated.map((staff) => (
                             <div
                                 key={staff.id}
-                                className="bg-white rounded-xl border border-gray-100 p-3.5"
+                                className="bg-white dark:bg-[#18181b] rounded-2xl border border-gray-100 dark:border-[#27272a] p-4 shadow-sm relative overflow-hidden"
                             >
-                                <div className="flex items-center justify-between mb-3">
-                                    <div className="flex items-center gap-2.5 min-w-0">
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center shrink-0">
+                                <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-50 to-transparent -z-10 rounded-bl-[100px]" />
+
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="flex flex-1 items-center gap-3 min-w-0">
+                                        <div className="w-12 h-12 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center shrink-0 border border-gray-200 dark:border-[#27272a] shadow-sm">
                                             {staff.avatarUrl ? (
                                                 <img
                                                     src={getImageUrl(staff.avatarUrl)!}
@@ -350,39 +352,42 @@ export const StaffPage = () => {
                                                     className="w-full h-full object-cover"
                                                 />
                                             ) : (
-                                                <span className="text-sm font-semibold text-gray-500">
+                                                <span className="text-sm font-semibold text-gray-500 dark:text-[#a1a1aa]">
                                                     {staff.firstName.charAt(0)}
                                                 </span>
                                             )}
                                         </div>
-                                        <div className="min-w-0">
-                                            <p className="text-sm font-medium text-gray-900 truncate">
+                                        <div className="min-w-0 pr-2">
+                                            <p className="text-[15px] font-bold text-gray-900 dark:text-[#fafafa] truncate">
                                                 {staff.firstName} {staff.lastName}
                                             </p>
-                                            <p className="text-xs text-gray-400">
+                                            <p className="text-xs text-gray-500 dark:text-[#a1a1aa] font-medium">
                                                 {staff.phoneNumber ?? "—"}
                                             </p>
                                         </div>
                                     </div>
-                                    <ToggleSwitch
-                                        checked={staff.isActive}
-                                        onChange={() => toggleActive.mutate(staff.id)}
-                                        disabled={toggleActive.isPending}
-                                    />
+                                    <div className="pt-1.5 self-start">
+                                        <ToggleSwitch
+                                            checked={staff.isActive}
+                                            onChange={() => toggleActive.mutate(staff.id)}
+                                            disabled={toggleActive.isPending}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-between">
+
+                                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gray-50">
                                     <RoleBadge role={staff.role} />
                                     <div className="flex items-center gap-1">
                                         <button
                                             onClick={() => setEditStaff(staff)}
-                                            className="p-2 text-gray-400 hover:text-blue-600 transition-colors rounded-lg"
+                                            className="p-2 text-gray-400 dark:text-[#71717a] hover:text-blue-600 transition-colors rounded-lg"
                                         >
                                             <Pencil size={16} />
                                         </button>
                                         <button
                                             onClick={() => confirmDelete(staff)}
                                             disabled={deleteStaff.isPending}
-                                            className="p-2 text-gray-400 hover:text-red-600 transition-colors rounded-lg disabled:opacity-50"
+                                            className="p-2 text-gray-400 dark:text-[#71717a] hover:text-red-600 transition-colors rounded-lg disabled:opacity-50"
                                         >
                                             <Trash2 size={16} />
                                         </button>
@@ -395,23 +400,23 @@ export const StaffPage = () => {
                     {/* ── Pagination ── */}
                     {totalPages > 1 && (
                         <div className="flex items-center justify-between mt-1">
-                            <p className="text-xs sm:text-sm text-gray-500">
-                                {filtered.length} tadan{" "}
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-[#a1a1aa]">
+                                {filtered.length} {t("tadan")}{" "}
                                 {(safePage - 1) * PAGE_SIZE + 1}–
                                 {Math.min(safePage * PAGE_SIZE, filtered.length)}{" "}
-                                ko'rsatilmoqda
+                                {t("ko'rsatilmoqda")}
                             </p>
                             <div className="flex items-center gap-1">
                                 <button
                                     disabled={safePage === 1}
                                     onClick={() => setPage((p) => p - 1)}
-                                    className="p-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 transition-colors"
+                                    className="p-1.5 rounded-lg border border-gray-200 dark:border-[#27272a] text-gray-600 hover:bg-gray-50 dark:hover:bg-[#27272a] dark:bg-[#27272a] disabled:opacity-30 transition-colors"
                                 >
                                     <ChevronLeft size={16} />
                                 </button>
 
                                 {/* Mobile: X / Y */}
-                                <span className="sm:hidden text-xs px-2 text-gray-500">
+                                <span className="sm:hidden text-xs px-2 text-gray-500 dark:text-[#a1a1aa]">
                                     {safePage} / {totalPages}
                                 </span>
 
@@ -423,8 +428,8 @@ export const StaffPage = () => {
                                                 key={p}
                                                 onClick={() => setPage(p)}
                                                 className={`w-7 h-7 rounded-lg text-xs font-medium transition-colors ${p === safePage
-                                                        ? "bg-blue-600 text-white"
-                                                        : "text-gray-600 hover:bg-gray-100"
+                                                    ? "bg-blue-600 text-white"
+                                                    : "text-gray-600 hover:bg-gray-100"
                                                     }`}
                                             >
                                                 {p}
@@ -436,7 +441,7 @@ export const StaffPage = () => {
                                 <button
                                     disabled={safePage === totalPages}
                                     onClick={() => setPage((p) => p + 1)}
-                                    className="p-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 transition-colors"
+                                    className="p-1.5 rounded-lg border border-gray-200 dark:border-[#27272a] text-gray-600 hover:bg-gray-50 dark:hover:bg-[#27272a] dark:bg-[#27272a] disabled:opacity-30 transition-colors"
                                 >
                                     <ChevronRight size={16} />
                                 </button>
